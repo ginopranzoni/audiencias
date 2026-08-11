@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red de audiencias | Audiencias APN 2004–2022</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.34.0/dist/cytoscape.min.js"></script>
+
+  <style>
+    :root{
+      --navy:#172554;
+      --navy-2:#0f172a;
+      --blue:#2563eb;
+      --cyan:#06b6d4;
+      --orange:#f59e0b;
+      --green:#16a34a;
+      --violet:#7c3aed;
+      --rose:#e11d48;
+      --bg:#f8fafc;
+      --panel:#ffffff;
+      --line:#e2e8f0;
+      --text:#0f172a;
+      --muted:#64748b;
+      --soft:#eef2ff;
+      --shadow:0 10px 30px rgba(15,23,42,.10);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    a{color:inherit}
+
+    .topbar{
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:16px 28px;
+      background:var(--navy);
+      color:#fff;
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+
+    .brand strong{font-size:18px}
+    .brand span{font-size:13px;opacity:.72}
+
+    .back{
+      text-decoration:none;
+      border:1px solid rgba(255,255,255,.25);
+      border-radius:9px;
+      padding:9px 13px;
+      font-size:14px;
+      background:rgba(255,255,255,.05);
+    }
+
+    .page{
+      max-width:1500px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .intro{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:30px;
+      margin-bottom:18px;
+    }
+
+    .eyebrow{
+      color:var(--blue);
+      font-size:12px;
+      text-transform:uppercase;
+      font-weight:800;
+      letter-spacing:.12em;
+      margin-bottom:7px;
+    }
+
+    h1{
+      font-size:clamp(28px,4vw,44px);
+      line-height:1.08;
+      margin:0 0 10px;
+      letter-spacing:-.025em;
+    }
+
+    .intro p{
+      margin:0;
+      color:var(--muted);
+      max-width:860px;
+      font-size:16px;
+      line-height:1.55;
+    }
+
+    .demo-badge{
+      flex:none;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#9a3412;
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:750;
+      font-size:12px;
+    }
+
+    .workspace{
+      display:grid;
+      grid-template-columns:280px minmax(0,1fr) 290px;
+      gap:16px;
+      align-items:stretch;
+    }
+
+    .panel, .network-card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .panel{
+      padding:18px;
+      min-height:690px;
+    }
+
+    .panel h2{
+      font-size:15px;
+      margin:0 0 15px;
+    }
+
+    .field{margin-bottom:15px}
+    .field label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:750;
+      margin-bottom:6px;
+    }
+
+    select, input[type="search"]{
+      width:100%;
+      border:1px solid #cbd5e1;
+      border-radius:9px;
+      padding:10px 10px;
+      background:#fff;
+      color:var(--text);
+      font:inherit;
+      font-size:13px;
+      outline:none;
+    }
+
+    select:focus, input[type="search"]:focus{
+      border-color:#93c5fd;
+      box-shadow:0 0 0 3px #dbeafe;
+    }
+
+    .range-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    input[type="range"]{
+      flex:1;
+      accent-color:var(--blue);
+    }
+
+    .range-value{
+      min-width:34px;
+      text-align:center;
+      background:var(--soft);
+      color:var(--navy);
+      border-radius:8px;
+      font-weight:850;
+      padding:5px 7px;
+    }
+
+    .button{
+      width:100%;
+      border:0;
+      cursor:pointer;
+      border-radius:9px;
+      padding:10px 12px;
+      font-weight:750;
+      font-size:13px;
+      transition:.15s ease;
+    }
+
+    .button:hover{transform:translateY(-1px)}
+    .button.primary{background:var(--navy);color:#fff}
+    .button.secondary{
+      margin-top:8px;
+      background:#f1f5f9;
+      color:#334155;
+    }
+
+    .legend{
+      margin-top:22px;
+      padding-top:16px;
+      border-top:1px solid var(--line);
+    }
+
+    .legend-title{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:9px;
+    }
+
+    .legend-item{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      font-size:12px;
+      margin:8px 0;
+      color:#475569;
+    }
+
+    .dot{
+      width:11px;
+      height:11px;
+      border-radius:50%;
+      flex:none;
+    }
+
+    .network-card{
+      min-height:690px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .network-toolbar{
+      height:56px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 14px 0 17px;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.96);
+    }
+
+    .counts{
+      display:flex;
+      gap:15px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .counts strong{color:var(--text)}
+
+    .mini-button{
+      border:1px solid #cbd5e1;
+      background:#fff;
+      border-radius:8px;
+      cursor:pointer;
+      padding:7px 10px;
+      font-size:12px;
+      font-weight:700;
+      color:#334155;
+    }
+
+    #cy{
+      width:100%;
+      height:634px;
+      background:
+        radial-gradient(circle at 50% 45%, #ffffff 0, #f8fafc 55%, #f1f5f9 100%);
+    }
+
+    .hint{
+      position:absolute;
+      left:16px;
+      bottom:14px;
+      padding:7px 10px;
+      background:rgba(15,23,42,.82);
+      color:#fff;
+      border-radius:8px;
+      font-size:11px;
+      pointer-events:none;
+    }
+
+    .details-empty{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      margin-top:6px;
+    }
+
+    .detail-tag{
+      display:inline-block;
+      border-radius:999px;
+      padding:5px 8px;
+      font-size:11px;
+      font-weight:800;
+      margin:0 5px 7px 0;
+      background:#f1f5f9;
+      color:#334155;
+    }
+
+    .detail-name{
+      margin:7px 0 10px;
+      font-size:21px;
+      line-height:1.2;
+      letter-spacing:-.015em;
+    }
+
+    .metric{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      padding:9px 0;
+      border-bottom:1px solid #edf2f7;
+      font-size:12px;
+    }
+
+    .metric span{color:var(--muted)}
+    .metric strong{text-align:right}
+
+    .connections{
+      margin-top:16px;
+    }
+
+    .connections h3{
+      margin:0 0 9px;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.07em;
+      color:var(--muted);
+    }
+
+    .connection{
+      padding:9px 0;
+      border-bottom:1px solid #edf2f7;
+      font-size:12px;
+    }
+
+    .connection strong{display:block}
+    .connection span{color:var(--muted)}
+
+    #tooltip{
+      position:fixed;
+      display:none;
+      z-index:9999;
+      pointer-events:none;
+      max-width:280px;
+      background:rgba(15,23,42,.94);
+      color:#fff;
+      padding:8px 10px;
+      border-radius:8px;
+      font-size:11px;
+      box-shadow:0 6px 24px rgba(0,0,0,.18);
+    }
+
+    .note{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    @media(max-width:1050px){
+      .workspace{grid-template-columns:250px minmax(0,1fr)}
+      .details{grid-column:1/-1;min-height:auto}
+    }
+
+    @media(max-width:760px){
+      .page{padding:16px}
+      .topbar{padding:14px 16px}
+      .intro{align-items:flex-start;flex-direction:column}
+      .workspace{grid-template-columns:1fr}
+      .panel{min-height:auto}
+      .network-card{min-height:600px}
+      #cy{height:545px}
+      .counts{gap:8px}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <strong>Audiencias APN 2004–2022</strong>
+      <span>Explorador de relaciones Estado–actores privados</span>
+    </div>
+    <a class="back" href="index.html">← Volver al proyecto</a>
+  </header>
+
+  <main class="page">
+    <section class="intro">
+      <div>
+        <div class="eyebrow">Visualización interactiva</div>
+        <h1>Red de audiencias</h1>
+        <p>
+          Cada nodo representa un actor u organismo. El grosor de las aristas refleja
+          la cantidad de audiencias compartidas. Usá los filtros para reducir la red
+          y explorar relaciones específicas.
+        </p>
+      </div>
+      <div class="demo-badge">DEMO · datos ilustrativos</div>
+    </section>
+
+    <section class="workspace">
+
+      <aside class="panel">
+        <h2>Filtros</h2>
+
+        <div class="field">
+          <label for="search">Buscar actor u organismo</label>
+          <input id="search" type="search" placeholder="Ej. Energía, cámara..." />
+        </div>
+
+        <div class="field">
+          <label for="year">Año</label>
+          <select id="year">
+            <option value="all">Todos los años</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="organism">Organismo público</label>
+          <select id="organism">
+            <option value="all">Todos los organismos</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="sector">Actividad principal / sector</label>
+          <select id="sector">
+            <option value="all">Todas las actividades</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="actorType">Tipo de actor privado</label>
+          <select id="actorType">
+            <option value="all">Todos los tipos</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="minWeight">Mínimo de audiencias por vínculo</label>
+          <div class="range-row">
+            <input id="minWeight" type="range" min="1" max="12" value="5" step="1" />
+            <div class="range-value" id="minWeightValue">5</div>
+          </div>
+        </div>
+
+        <button class="button primary" id="apply">Aplicar filtros</button>
+        <button class="button secondary" id="reset">Restablecer</button>
+
+        <div class="legend">
+          <div class="legend-title">Leyenda</div>
+          <div class="legend-item"><span class="dot" style="background:#2563eb"></span> Organismo público</div>
+          <div class="legend-item"><span class="dot" style="background:#f59e0b"></span> Empresa</div>
+          <div class="legend-item"><span class="dot" style="background:#16a34a"></span> Cámara / asociación</div>
+          <div class="legend-item"><span class="dot" style="background:#7c3aed"></span> Sindicato</div>
+          <div class="legend-item"><span class="dot" style="background:#e11d48"></span> ONG / otros</div>
+        </div>
+
+        <div class="note">
+          En la versión con datos reales, “Actividad principal / sector” se construirá
+          principalmente a partir de <strong>descripcionActividadPrincipal</strong>.
+        </div>
+      </aside>
+
+      <div class="network-card">
+        <div class="network-toolbar">
+          <div class="counts">
+            <span><strong id="nodeCount">0</strong> nodos</span>
+            <span><strong id="edgeCount">0</strong> vínculos</span>
+            <span><strong id="audienceCount">0</strong> audiencias</span>
+          </div>
+          <button class="mini-button" id="fit">Recentrar red</button>
+        </div>
+        <div id="cy"></div>
+        <div class="hint">Arrastrá nodos · rueda para zoom · clic para ver detalle</div>
+      </div>
+
+      <aside class="panel details">
+        <h2>Detalle</h2>
+        <div id="details">
+          <div class="details-empty">
+            Hacé clic sobre un nodo o una arista para ver información del vínculo.
+          </div>
+        </div>
+      </aside>
+
+    </section>
+  </main>
+
+  <div id="tooltip"></div>
+
+<script>
+  // -------------------------------------------------------------------
+  // DATOS DEMO
+  // Son deliberadamente ilustrativos. En la fase B se reemplazan por
+  // nodes.json y edges.json generados desde el Excel v6.
+  // -------------------------------------------------------------------
+
+  const nodes = [
+    { data:{ id:"pub_economia", label:"Ministerio de Economía", side:"public", actorType:"Organismo público" } },
+    { data:{ id:"pub_produccion", label:"Ministerio de Producción", side:"public", actorType:"Organismo público" } },
+    { data:{ id:"pub_energia", label:"Secretaría de Energía", side:"public", actorType:"Organismo público" } },
+    { data:{ id:"pub_jgm", label:"Jefatura de Gabinete", side:"public", actorType:"Organismo público" } },
+    { data:{ id:"pub_trabajo", label:"Ministerio de Trabajo", side:"public", actorType:"Organismo público" } },
+
+    { data:{ id:"priv_auto1", label:"Automotriz del Plata", side:"private", actorType:"Empresa", sector:"Fabricación de vehículos automotores" } },
+    { data:{ id:"priv_auto2", label:"Motores Argentinos", side:"private", actorType:"Empresa", sector:"Fabricación de vehículos automotores" } },
+    { data:{ id:"priv_camind", label:"Cámara Industrial Argentina", side:"private", actorType:"Cámara / asociación", sector:"Actividades de asociaciones empresariales" } },
+    { data:{ id:"priv_energia1", label:"Energía Federal", side:"private", actorType:"Empresa", sector:"Extracción de petróleo y gas" } },
+    { data:{ id:"priv_energia2", label:"PetroSur", side:"private", actorType:"Empresa", sector:"Extracción de petróleo y gas" } },
+    { data:{ id:"priv_banco", label:"Banco Metropolitano", side:"private", actorType:"Empresa", sector:"Servicios financieros" } },
+    { data:{ id:"priv_fin", label:"Asociación de Bancos", side:"private", actorType:"Cámara / asociación", sector:"Servicios financieros" } },
+    { data:{ id:"priv_alim", label:"Alimentos Centro", side:"private", actorType:"Empresa", sector:"Elaboración de productos alimenticios" } },
+    { data:{ id:"priv_com", label:"Cámara de Comercio", side:"private", actorType:"Cámara / asociación", sector:"Comercio mayorista y minorista" } },
+    { data:{ id:"priv_union", label:"Unión de Trabajadores Industriales", side:"private", actorType:"Sindicato", sector:"Actividades sindicales" } },
+    { data:{ id:"priv_fund", label:"Fundación Desarrollo Abierto", side:"private", actorType:"ONG / otros", sector:"Actividades de organizaciones" } }
+  ];
+
+  const edges = [
+    edge("e1","pub_produccion","priv_auto1", {2018:3,2019:4,2020:2,2021:5}, "Ministerio de Producción"),
+    edge("e2","pub_produccion","priv_auto2", {2018:2,2019:2,2020:3,2021:2}, "Ministerio de Producción"),
+    edge("e3","pub_produccion","priv_camind", {2018:4,2019:5,2020:6,2021:4,2022:3}, "Ministerio de Producción"),
+    edge("e4","pub_economia","priv_camind", {2019:3,2020:5,2021:7,2022:5}, "Ministerio de Economía"),
+    edge("e5","pub_economia","priv_banco", {2018:4,2019:6,2020:5,2021:7,2022:4}, "Ministerio de Economía"),
+    edge("e6","pub_economia","priv_fin", {2018:3,2019:4,2020:6,2021:5,2022:6}, "Ministerio de Economía"),
+    edge("e7","pub_economia","priv_alim", {2020:2,2021:4,2022:3}, "Ministerio de Economía"),
+    edge("e8","pub_energia","priv_energia1", {2018:5,2019:8,2020:7,2021:9,2022:6}, "Secretaría de Energía"),
+    edge("e9","pub_energia","priv_energia2", {2018:4,2019:6,2020:9,2021:8,2022:7}, "Secretaría de Energía"),
+    edge("e10","pub_jgm","priv_camind", {2018:2,2019:3,2020:5,2021:6,2022:4}, "Jefatura de Gabinete"),
+    edge("e11","pub_jgm","priv_com", {2019:2,2020:4,2021:7,2022:5}, "Jefatura de Gabinete"),
+    edge("e12","pub_trabajo","priv_union", {2018:5,2019:6,2020:8,2021:7,2022:8}, "Ministerio de Trabajo"),
+    edge("e13","pub_trabajo","priv_camind", {2019:2,2020:4,2021:5,2022:4}, "Ministerio de Trabajo"),
+    edge("e14","pub_jgm","priv_fund", {2020:2,2021:3,2022:4}, "Jefatura de Gabinete"),
+    edge("e15","pub_economia","priv_com", {2018:2,2019:3,2020:4,2021:4,2022:3}, "Ministerio de Economía"),
+    edge("e16","pub_produccion","priv_alim", {2018:2,2019:4,2020:5,2021:6,2022:4}, "Ministerio de Producción"),
+    edge("e17","pub_jgm","priv_banco", {2019:2,2020:3,2021:3,2022:2}, "Jefatura de Gabinete"),
+    edge("e18","pub_energia","priv_camind", {2019:2,2020:3,2021:4,2022:3}, "Secretaría de Energía")
+  ];
+
+  function edge(id, source, target, byYear, organism){
+    const total = Object.values(byYear).reduce((a,b)=>a+b,0);
+    return { data:{ id, source, target, byYear, weight:total, organism } };
+  }
+
+  const nodeById = Object.fromEntries(nodes.map(n => [n.data.id, n.data]));
+
+  // Deriva metadatos del actor privado hacia cada arista
+  edges.forEach(e => {
+    const target = nodeById[e.data.target];
+    e.data.sector = target?.sector || "";
+    e.data.actorType = target?.actorType || "";
+  });
+
+  // -------------------------------------------------------------------
+  // CONTROLES
+  // -------------------------------------------------------------------
+
+  const yearEl = document.getElementById("year");
+  const organismEl = document.getElementById("organism");
+  const sectorEl = document.getElementById("sector");
+  const actorTypeEl = document.getElementById("actorType");
+  const minWeightEl = document.getElementById("minWeight");
+  const minWeightValue = document.getElementById("minWeightValue");
+  const searchEl = document.getElementById("search");
+
+  const years = [...new Set(edges.flatMap(e => Object.keys(e.data.byYear)))].sort();
+  const organisms = [...new Set(edges.map(e => e.data.organism))].sort();
+  const sectors = [...new Set(nodes.filter(n => n.data.side==="private").map(n => n.data.sector))].sort();
+  const actorTypes = [...new Set(nodes.filter(n => n.data.side==="private").map(n => n.data.actorType))].sort();
+
+  fillSelect(yearEl, years);
+  fillSelect(organismEl, organisms);
+  fillSelect(sectorEl, sectors);
+  fillSelect(actorTypeEl, actorTypes);
+
+  function fillSelect(el, values){
+    values.forEach(v => {
+      const option = document.createElement("option");
+      option.value = v;
+      option.textContent = v;
+      el.appendChild(option);
+    });
+  }
+
+  minWeightEl.addEventListener("input", () => {
+    minWeightValue.textContent = minWeightEl.value;
+  });
+
+  // -------------------------------------------------------------------
+  // CYTOSCAPE
+  // -------------------------------------------------------------------
+
+  const cy = cytoscape({
+    container: document.getElementById("cy"),
+    elements: [...nodes, ...edges],
+    wheelSensitivity: 0.22,
+    minZoom: 0.25,
+    maxZoom: 2.8,
+
+    style: [
+      {
+        selector:"node",
+        style:{
+          "label":"data(label)",
+          "font-size":10,
+          "font-weight":650,
+          "color":"#334155",
+          "text-wrap":"wrap",
+          "text-max-width":110,
+          "text-valign":"bottom",
+          "text-margin-y":7,
+          "background-color":"#94a3b8",
+          "width":34,
+          "height":34,
+          "border-width":2,
+          "border-color":"#ffffff",
+          "overlay-opacity":0
+        }
+      },
+      {
+        selector:'node[side = "public"]',
+        style:{
+          "background-color":"#2563eb",
+          "shape":"round-rectangle"
+        }
+      },
+      {
+        selector:'node[actorType = "Empresa"]',
+        style:{"background-color":"#f59e0b"}
+      },
+      {
+        selector:'node[actorType = "Cámara / asociación"]',
+        style:{"background-color":"#16a34a"}
+      },
+      {
+        selector:'node[actorType = "Sindicato"]',
+        style:{"background-color":"#7c3aed"}
+      },
+      {
+        selector:'node[actorType = "ONG / otros"]',
+        style:{"background-color":"#e11d48"}
+      },
+      {
+        selector:"edge",
+        style:{
+          "curve-style":"bezier",
+          "line-color":"#94a3b8",
+          "opacity":0.42,
+          "width":"mapData(displayWeight, 1, 35, 1, 9)",
+          "overlay-opacity":0
+        }
+      },
+      {
+        selector:":selected",
+        style:{
+          "border-width":4,
+          "border-color":"#0f172a",
+          "opacity":1
+        }
+      },
+      {
+        selector:".faded",
+        style:{"opacity":0.10}
+      },
+      {
+        selector:".matched",
+        style:{
+          "border-width":5,
+          "border-color":"#06b6d4"
+        }
+      }
+    ],
+
+    layout:{
+      name:"cose",
+      animate:true,
+      animationDuration:800,
+      randomize:true,
+      nodeRepulsion:900000,
+      idealEdgeLength:115,
+      edgeElasticity:70,
+      gravity:0.18,
+      numIter:1100,
+      padding:45
+    }
+  });
+
+  function recalcNodeSizes(){
+    cy.nodes(":visible").forEach(n => {
+      const weighted = n.connectedEdges(":visible").reduce((sum,e) => sum + (e.data("displayWeight") || 0), 0);
+      const size = Math.max(28, Math.min(68, 26 + Math.sqrt(weighted) * 5.3));
+      n.style({width:size, height:size});
+    });
+  }
+
+  function applyFilters(runLayout=true){
+    const year = yearEl.value;
+    const organism = organismEl.value;
+    const sector = sectorEl.value;
+    const actorType = actorTypeEl.value;
+    const minWeight = Number(minWeightEl.value);
+
+    cy.batch(() => {
+      cy.elements().show();
+
+      cy.edges().forEach(e => {
+        const byYear = e.data("byYear");
+        const displayWeight = year === "all"
+          ? Object.values(byYear).reduce((a,b)=>a+b,0)
+          : Number(byYear[year] || 0);
+
+        e.data("displayWeight", displayWeight);
+
+        const keep =
+          displayWeight >= minWeight &&
+          (organism === "all" || e.data("organism") === organism) &&
+          (sector === "all" || e.data("sector") === sector) &&
+          (actorType === "all" || e.data("actorType") === actorType);
+
+        if(!keep) e.hide();
+      });
+
+      cy.nodes().forEach(n => {
+        if(n.connectedEdges(":visible").length === 0) n.hide();
+      });
+    });
+
+    recalcNodeSizes();
+    updateCounts();
+    applySearchHighlight();
+
+    if(runLayout){
+      cy.layout({
+        name:"cose",
+        animate:true,
+        animationDuration:500,
+        randomize:false,
+        nodeRepulsion:850000,
+        idealEdgeLength:120,
+        edgeElasticity:70,
+        gravity:0.17,
+        numIter:650,
+        padding:45
+      }).run();
+    }
+  }
+
+  function updateCounts(){
+    const visibleEdges = cy.edges(":visible");
+    const visibleNodes = cy.nodes(":visible");
+    const audiences = visibleEdges.reduce((sum,e)=>sum+(e.data("displayWeight")||0),0);
+
+    document.getElementById("nodeCount").textContent = visibleNodes.length;
+    document.getElementById("edgeCount").textContent = visibleEdges.length;
+    document.getElementById("audienceCount").textContent = audiences.toLocaleString("es-AR");
+  }
+
+  function applySearchHighlight(){
+    const q = searchEl.value.trim().toLowerCase();
+    cy.nodes().removeClass("matched faded");
+    cy.edges().removeClass("faded");
+
+    if(!q) return;
+
+    const matches = cy.nodes(":visible").filter(n =>
+      (n.data("label") || "").toLowerCase().includes(q)
+    );
+
+    if(matches.length){
+      cy.elements(":visible").addClass("faded");
+      matches.removeClass("faded").addClass("matched");
+      matches.connectedEdges(":visible").removeClass("faded");
+      matches.neighborhood("node:visible").removeClass("faded");
+    }
+  }
+
+  document.getElementById("apply").addEventListener("click", ()=>applyFilters(true));
+
+  document.getElementById("reset").addEventListener("click", ()=>{
+    yearEl.value="all";
+    organismEl.value="all";
+    sectorEl.value="all";
+    actorTypeEl.value="all";
+    minWeightEl.value=5;
+    minWeightValue.textContent="5";
+    searchEl.value="";
+    applyFilters(true);
+    document.getElementById("details").innerHTML =
+      '<div class="details-empty">Hacé clic sobre un nodo o una arista para ver información del vínculo.</div>';
+  });
+
+  searchEl.addEventListener("input", applySearchHighlight);
+  document.getElementById("fit").addEventListener("click", ()=>cy.fit(cy.elements(":visible"), 55));
+
+  // -------------------------------------------------------------------
+  // DETALLE
+  // -------------------------------------------------------------------
+
+  function showNodeDetails(n){
+    const isPublic = n.data("side")==="public";
+    const visibleEdges = n.connectedEdges(":visible");
+    const total = visibleEdges.reduce((sum,e)=>sum+(e.data("displayWeight")||0),0);
+
+    const rows = visibleEdges
+      .sort((a,b)=>(b.data("displayWeight")||0)-(a.data("displayWeight")||0))
+      .slice(0,8)
+      .map(e=>{
+        const other = e.source().id()===n.id() ? e.target() : e.source();
+        return `<div class="connection">
+          <strong>${escapeHtml(other.data("label"))}</strong>
+          <span>${e.data("displayWeight")} audiencias visibles</span>
+        </div>`;
+      }).join("");
+
+    document.getElementById("details").innerHTML = `
+      <span class="detail-tag">${isPublic ? "Organismo público" : escapeHtml(n.data("actorType"))}</span>
+      ${!isPublic && n.data("sector") ? `<span class="detail-tag">${escapeHtml(n.data("sector"))}</span>` : ""}
+      <div class="detail-name">${escapeHtml(n.data("label"))}</div>
+
+      <div class="metric"><span>Audiencias visibles</span><strong>${total}</strong></div>
+      <div class="metric"><span>Conexiones visibles</span><strong>${visibleEdges.length}</strong></div>
+      <div class="metric"><span>Clase de nodo</span><strong>${isPublic ? "Público" : "Privado"}</strong></div>
+
+      <div class="connections">
+        <h3>Principales vínculos</h3>
+        ${rows || '<div class="details-empty">Sin vínculos con los filtros actuales.</div>'}
+      </div>
+    `;
+  }
+
+  function showEdgeDetails(e){
+    const src = e.source().data("label");
+    const tgt = e.target().data("label");
+    const year = yearEl.value;
+    const period = year==="all" ? "Período visible" : year;
+
+    document.getElementById("details").innerHTML = `
+      <span class="detail-tag">Vínculo</span>
+      <div class="detail-name">${escapeHtml(src)} ↔ ${escapeHtml(tgt)}</div>
+      <div class="metric"><span>${period}</span><strong>${e.data("displayWeight")} audiencias</strong></div>
+      <div class="metric"><span>Organismo</span><strong>${escapeHtml(e.data("organism"))}</strong></div>
+      <div class="metric"><span>Actividad principal</span><strong>${escapeHtml(e.data("sector"))}</strong></div>
+      <div class="metric"><span>Tipo de actor</span><strong>${escapeHtml(e.data("actorType"))}</strong></div>
+    `;
+  }
+
+  cy.on("tap","node", evt => showNodeDetails(evt.target));
+  cy.on("tap","edge", evt => showEdgeDetails(evt.target));
+
+  // Tooltip simple
+  const tooltip = document.getElementById("tooltip");
+
+  cy.on("mouseover","node, edge", evt => {
+    const ele = evt.target;
+    let text = "";
+    if(ele.isNode()){
+      text = ele.data("label");
+    } else {
+      text = `${ele.source().data("label")} ↔ ${ele.target().data("label")} · ${ele.data("displayWeight") || ele.data("weight")} audiencias`;
+    }
+    tooltip.textContent = text;
+    tooltip.style.display="block";
+  });
+
+  cy.on("mousemove","node, edge", evt => {
+    const original = evt.originalEvent;
+    if(!original) return;
+    tooltip.style.left = (original.clientX + 14) + "px";
+    tooltip.style.top = (original.clientY + 14) + "px";
+  });
+
+  cy.on("mouseout","node, edge", () => {
+    tooltip.style.display="none";
+  });
+
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // Inicialización
+  applyFilters(false);
+  setTimeout(()=>cy.fit(cy.elements(":visible"),55),850);
+</script>
+</body>
+</html>
