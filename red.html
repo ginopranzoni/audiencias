@@ -175,7 +175,7 @@ function setupControls(){
 
 function createNetwork(){
   cy = cytoscape({
-    container:document.getElementById("cy"), elements:[...NODE_DATA,...EDGE_DATA], wheelSensitivity:.22, minZoom:.18, maxZoom:3,
+    container:document.getElementById("cy"), elements:[...NODE_DATA,...EDGE_DATA], wheelSensitivity:.22, minZoom:.18, maxZoom:3, pixelRatio:1, hideEdgesOnViewport:true,
     style:[
       {selector:"node",style:{"label":"data(label)","font-size":9,"font-weight":650,"color":"#334155","text-wrap":"wrap","text-max-width":105,"text-valign":"bottom","text-margin-y":7,"background-color":"#94a3b8","width":32,"height":32,"border-width":2,"border-color":"#fff","overlay-opacity":0}},
       {selector:'node[side = "public"]',style:{"background-color":"#2563eb","shape":"round-rectangle"}},
@@ -190,7 +190,7 @@ function createNetwork(){
       {selector:":selected",style:{"border-width":4,"border-color":"#0f172a","opacity":1}},
       {selector:".faded",style:{"opacity":.08}},{selector:".matched",style:{"border-width":5,"border-color":"#06b6d4"}}
     ],
-    layout:{name:"cose",animate:false,randomize:true,nodeRepulsion:900000,idealEdgeLength:105,edgeElasticity:70,gravity:.16,numIter:600,padding:45}
+    layout:{name:"preset"}
   });
   wireNetworkEvents();
   applyFilters(true);
@@ -230,9 +230,15 @@ function recalcNodeSizes(){
 }
 
 function runBestLayout(){
-  const n=cy.nodes(":visible").length;
-  const opts = n>420 ? {name:"cose",animate:false,randomize:false,nodeRepulsion:650000,idealEdgeLength:70,gravity:.28,numIter:220,padding:35} : {name:"cose",animate:true,animationDuration:450,randomize:false,nodeRepulsion:850000,idealEdgeLength:110,edgeElasticity:70,gravity:.17,numIter:520,padding:45};
-  cy.layout(opts).run(); setTimeout(()=>cy.fit(cy.elements(":visible"),50),opts.animate?480:40);
+  const visible = cy.elements(":visible");
+  const n = visible.nodes().length;
+
+  const opts = n>220
+    ? {name:"cose",animate:false,randomize:false,nodeRepulsion:620000,idealEdgeLength:75,gravity:.25,numIter:180,padding:35}
+    : {name:"cose",animate:false,randomize:false,nodeRepulsion:780000,idealEdgeLength:105,edgeElasticity:70,gravity:.18,numIter:300,padding:45};
+
+  visible.layout(opts).run();
+  setTimeout(()=>cy.fit(visible,50),30);
 }
 
 function updateCounts(){
@@ -281,11 +287,11 @@ function wireNetworkEvents(){
 }
 
 minWeightEl.addEventListener("input",()=>{minWeightValue.textContent=minWeightEl.value;autoThresholdEl.checked=false});
-yearEl.addEventListener("change",()=>{setAutoThreshold();applyFilters(true)});autoThresholdEl.addEventListener("change",()=>{setAutoThreshold();applyFilters(true)});
+yearEl.addEventListener("change",()=>setAutoThreshold());autoThresholdEl.addEventListener("change",()=>setAutoThreshold());
 document.getElementById("apply").addEventListener("click",()=>applyFilters(true));
 document.getElementById("reset").addEventListener("click",()=>{yearEl.value="all";organismEl.value="all";sectorEl.value="all";actorTypeEl.value="all";searchEl.value="";autoThresholdEl.checked=true;setAutoThreshold();applyFilters(true);document.getElementById("details").innerHTML='<div class="details-empty">Hacé clic sobre un nodo o una arista para ver información del vínculo.</div>'});
 searchEl.addEventListener("input",applySearchHighlight);document.getElementById("fit").addEventListener("click",()=>cy&&cy.fit(cy.elements(":visible"),50));
-organismEl.addEventListener("change",()=>applyFilters(true));sectorEl.addEventListener("change",()=>applyFilters(true));actorTypeEl.addEventListener("change",()=>applyFilters(true));
+
 
 loadData();
 </script>
