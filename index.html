@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Audiencias Públicas APN 2004–2022</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #222;
+      background: #fafafa;
+      line-height: 1.6;
+    }
+
+    /* HERO */
+
+    .hero {
+      background: #172554;
+      color: white;
+      padding: 100px 20px 90px;
+    }
+
+    .hero-content {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .hero-label {
+      font-size: 15px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      opacity: 0.75;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      line-height: 1.1;
+      max-width: 850px;
+      margin-bottom: 24px;
+    }
+
+    .hero p {
+      font-size: 21px;
+      max-width: 800px;
+      opacity: 0.88;
+      margin-bottom: 35px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 13px 22px;
+      border-radius: 7px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .button-primary {
+      background: white;
+      color: #172554;
+    }
+
+    .button-secondary {
+      border: 1px solid rgba(255,255,255,0.7);
+      color: white;
+    }
+
+
+    /* CONTENIDO */
+
+    section {
+      padding: 75px 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h2 {
+      font-size: 32px;
+      margin-bottom: 25px;
+      color: #172554;
+    }
+
+    .intro {
+      font-size: 19px;
+      max-width: 850px;
+    }
+
+
+    /* ESTADISTICAS */
+
+    .stats {
+      background: white;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-top: 40px;
+    }
+
+    .stat {
+      border-top: 4px solid #172554;
+      padding: 25px 5px;
+    }
+
+    .stat-number {
+      font-size: 42px;
+      font-weight: bold;
+      color: #172554;
+    }
+
+    .stat-label {
+      font-size: 16px;
+      color: #666;
+    }
+
+
+    /* PROYECTO */
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+    }
+
+    .project-grid p {
+      margin-bottom: 18px;
+    }
+
+
+    /* DATOS */
+
+    .data-box {
+      background: #eef2ff;
+      padding: 35px;
+      border-radius: 12px;
+      margin-top: 30px;
+    }
+
+    .data-box h3 {
+      margin-bottom: 12px;
+      color: #172554;
+    }
+
+
+    /* FOOTER */
+
+    footer {
+      background: #111827;
+      color: #ccc;
+      padding: 35px 20px;
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    footer a {
+      color: white;
+    }
+
+
+    /* CELULAR */
+
+    @media (max-width: 750px) {
+
+      .hero {
+        padding-top: 70px;
+      }
+
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+<header class="hero">
+
+  <div class="hero-content">
+
+    <div class="hero-label">
+      Proyecto de investigación
+    </div>
+
+    <h1>
+      Audiencias Públicas de la Administración Pública Nacional
+    </h1>
+
+    <p>
+      Base de datos sistematizada de audiencias registradas en la
+      Administración Pública Nacional argentina entre 2004 y 2022.
+    </p>
+
+    <div class="buttons">
+
+      <a
+        class="button button-primary"
+        href="audiencias_2004-2022_AFIPSDK_v7.xlsx">
+        Descargar base de datos
+      </a>
+
+      <a
+        class="button button-secondary"
+        href="https://github.com/ginopranzoni/audiencias"
+        target="_blank">
+        Ver repositorio en GitHub
+      </a>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+
+<section class="stats">
+
+  <div class="container">
+
+    <h2>La base</h2>
+
+    <p class="intro">
+      El proyecto reúne y sistematiza información sobre las audiencias
+      mantenidas entre funcionarios públicos y actores privados,
+      organizaciones e instituciones.
+    </p>
+
+
+    <div class="stats-grid">
+
+      <div class="stat">
+        <div class="stat-number">98.615</div>
+        <div class="stat-label">audiencias registradas</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-number">2004–2022</div>
+        <div class="stat-label">período analizado</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-number">19</div>
+        <div class="stat-label">años de información</div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<section>
+
+  <div class="container">
+
+    <h2>Sobre el proyecto</h2>
+
+    <div class="project-grid">
+
+      <div>
+
+        <p>
+          La base fue construida a partir de los registros públicos de
+          audiencias de la Administración Pública Nacional.
+        </p>
+
+        <p>
+          El trabajo implicó procesos de limpieza, homogeneización,
+          clasificación y vinculación de los registros correspondientes
+          a diferentes organismos y períodos.
+        </p>
+
+      </div>
+
+
+      <div>
+
+        <p>
+          El objetivo es facilitar el estudio sistemático de las relaciones
+          entre el Estado y distintos actores económicos y sociales a partir
+          de una fuente administrativa de gran escala.
+        </p>
+
+        <p>
+          La estructura de los datos permite posteriormente desarrollar
+          análisis estadísticos, sectoriales y de redes.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<section class="stats">
+
+  <div class="container">
+
+    <h2>Datos abiertos</h2>
+
+    <p class="intro">
+      La base y sus distintas versiones se encuentran disponibles
+      públicamente en este repositorio.
+    </p>
+
+    <div class="data-box">
+
+      <h3>Última versión disponible</h3>
+
+      <p>
+        audiencias_2004-2022_AFIPSDK_v7.xlsx
+      </p>
+
+      <br>
+
+      <a
+        class="button button-primary"
+        style="background:#172554; color:white;"
+        href="audiencias_2004-2022_AFIPSDK_v7.xlsx">
+        Descargar archivo
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<footer>
+
+  <div class="container">
+
+    <div>
+      <strong>Audiencias APN 2004–2022</strong>
+      <br>
+      Proyecto de investigación
+    </div>
+
+    <div>
+      <a href="https://github.com/ginopranzoni">
+        github.com/ginopranzoni
+      </a>
+    </div>
+
+  </div>
+
+</footer>
+
+
+</body>
+
+</html>
