@@ -1,0 +1,108 @@
+{
+  "sourceFile": "audiencias_2004-2022_AFIPSDK_v6.xlsx",
+  "years": [
+    2004,
+    2005,
+    2006,
+    2007,
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "exportMinEdgeWeight": 5,
+  "defaultAllYearsThreshold": 15,
+  "defaultSingleYearThreshold": 5,
+  "nodes": 1060,
+  "actors": 970,
+  "organisms": 90,
+  "edges": 1096,
+  "includedUniqueAudiencesBeforeEdgeThreshold": 57573,
+  "sectors": [
+    "Administración pública",
+    "Agro, silvicultura y pesca",
+    "Alojamiento y gastronomía",
+    "Asociaciones, cultura y otros servicios",
+    "Comercio",
+    "Construcción",
+    "Educación, salud y servicios sociales",
+    "Energía, agua y saneamiento",
+    "Finanzas, seguros e inmobiliario",
+    "Industria manufacturera",
+    "Información y comunicaciones",
+    "Minería, petróleo y gas",
+    "Servicios profesionales y empresariales",
+    "Sin clasificar",
+    "Transporte y logística"
+  ],
+  "actorTypes": [
+    "Asociación / entidad civil",
+    "Cooperativa / mutual",
+    "Cámara / asociación empresaria",
+    "Empresa / entidad privada",
+    "Fundación / ONG",
+    "Persona física",
+    "Sindicato / gremio"
+  ],
+  "thresholdSummary": {
+    "5": {
+      "edges": 1096,
+      "nodes": 1060,
+      "audiences": 12509
+    },
+    "8": {
+      "edges": 478,
+      "nodes": 495,
+      "audiences": 8975
+    },
+    "10": {
+      "edges": 308,
+      "nodes": 333,
+      "audiences": 7544
+    },
+    "15": {
+      "edges": 162,
+      "nodes": 180,
+      "audiences": 5856
+    },
+    "20": {
+      "edges": 94,
+      "nodes": 106,
+      "audiences": 4740
+    },
+    "30": {
+      "edges": 59,
+      "nodes": 67,
+      "audiences": 3914
+    },
+    "50": {
+      "edges": 24,
+      "nodes": 29,
+      "audiences": 2580
+    }
+  },
+  "excludedRows": {
+    "actor_publico": 38975,
+    "estado_no_reunion": 2080,
+    "duplicado_audiencia_actor": 34,
+    "sin_actor": 4
+  },
+  "methodology": {
+    "actor": "representado_nombre cuando existe; en caso contrario solic_nombre_completo",
+    "organism": "root_dependencia_descripcion; si falta, dependencia extraída de obligado_cargo_dependencia",
+    "sector": "macro-sector derivado principalmente de descripcionActividadPrincipal (AL); AQ/código sólo como respaldo",
+    "states": "se excluyen Derivada, No Realizada y Reservada; los estados vacíos se conservan porque v6 no informa estado en 2017-2022",
+    "publicActors": "se excluyen registros identificados como organismos/actores públicos para concentrar la red en relaciones Estado-privados"
+  }
+}
